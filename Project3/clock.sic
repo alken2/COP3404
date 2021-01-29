@@ -1,0 +1,142 @@
+# Project 3
+# The plan:
+# 1. Have the most significant BIT in the last word of addressible memory set to determine whether 24 hour or 12 hour clock is used (1 = 24 hour clock, 0 = 12 hour clock)
+# 2. Follow C Code as closely as possible
+# 3. Write hour from C code to device using columns 1 & 2 (keep in mind the format of the clock)
+# 4. Write minute from C code to device using columns 3 & 4
+# 5. If the clock is 12 hour format, write 'A' on column 5 for hour <12 or 'P' otherwise to device
+# There are 86400 seconds in a day (After the bit mask, the hex value of TIMER should not exceed 1517F, but this code will accommodate for that anyway by basically resetting every 86400 seconds)
+# Finally, a reminder: a word is 3 bytes long, and a byte is 8 bits long
+CLOCK	START	7E77 # TIMER must be at 7FFD
+ZERO WORD 0
+ONE WORD  1
+TEN WORD  10
+ASCII WORD  48
+BITMSK  WORD  8388607
+HOUR  WORD 3600
+MINUTE  WORD  60
+MODEAM  WORD  65
+MODEPM  WORD  80
+TMPI  RESW  1 #Originally equal to TIMER -> to be used as the first H in HHMMT
+TMPII RESW  1 #Originally equal to the bitmasked TIMER -> to be used as the second H in HHMMT
+TMPIII  RESW  1 #Originally equal to the number of hours -> to be used as the first M in HHMMT
+TMPIV RESW  1 #Originally equal to the number of minutes -> to be used as the second M in HHMMT
+TMPV  RESW  1 #Equal to the ASCII representation of clock mode and will stay that way for T in HHMMT
+LCD WORD 64
+FIRST LDA ZERO
+  STA TMPIII
+  STA TMPIV
+  LDA TIMER
+  STA TMPI
+  AND BITMSK
+  STA TMPII
+  COMP  TMPI
+  JEQ MSBZER
+MSBONE  WORD  24
+  LDA ZERO
+  STA TMPV
+  LDA TMPII
+HLOOPI COMP  HOUR
+  JLT MLOOP
+  SUB HOUR
+  STA TMPII
+  LDA TMPIII
+  ADD ONE
+  COMP  MSBONE
+  JLT SETHI
+  SUB MSBONE
+SETHI  STA TMPIII
+  LDA TMPII
+  J HLOOPI
+MSBZER  WORD  12
+  LDA MODEAM
+  STA TMPV
+  LDA TMPII
+HLOOPO COMP  HOUR
+  JLT MIDDN
+  SUB HOUR
+  STA TMPII
+  LDA TMPIII
+  ADD ONE
+  COMP  MSBZER
+  JLT SETHO
+  SUB MSBZER
+  STA TMPIII
+  LDA TMPV
+  COMP  MODEAM
+  JEQ CMODE
+  LDA MODEAM
+  STA TMPV
+  LDA TMPIII
+  J SETHO
+CMODE LDA MODEPM
+  STA TMPV
+  LDA TMPIII
+SETHO  STA TMPIII
+  LDA TMPII
+  J HLOOPO
+MIDDN LDA TMPIII
+  COMP  ZERO
+  JGT MLOOP
+  ADD MSBZER
+  STA TMPIII
+MLOOP LDA TMPII
+  COMP  MINUTE
+  JLT ENDML
+  SUB MINUTE
+  STA TMPII
+  LDA TMPIV
+  ADD ONE
+  STA TMPIV
+  J MLOOP
+ENDML LDA ZERO
+  STA TMPI
+FHLOOP  LDA TMPIII
+  COMP  TEN
+  JLT ENDFHL
+  SUB TEN
+  STA TMPIII
+  LDA TMPI
+  ADD ONE
+  STA TMPI
+  J FHLOOP
+ENDFHL  LDA  TMPI
+  ADD ASCII
+  STA TMPI
+  LDA TMPIII
+  ADD ASCII
+  STA  TMPII
+  LDA ZERO
+  STA TMPIII
+  LDA TMPIV
+FMLOOP COMP  TEN
+  JLT FINALE
+  SUB TEN
+  STA TMPIV
+  LDA TMPIII
+  ADD ONE
+  STA  TMPIII
+  LDA TMPIV
+  J FMLOOP
+FINALE  LDA  TMPIII
+  ADD ASCII
+  STA  TMPIII
+  LDA  TMPIV
+  ADD ASCII
+  STA  TMPIV
+  LDA TMPI
+  WD  LCD
+  LDA TMPII
+  WD  LCD
+  LDA TMPIII
+  WD  LCD
+  LDA TMPIV
+  WD  LCD
+  LDA TMPV
+  COMP  ZERO
+  JEQ HALT
+  WD  LCD
+HALT  LDL ZERO
+  RSUB
+TIMER RESW	1
+  END FIRST
