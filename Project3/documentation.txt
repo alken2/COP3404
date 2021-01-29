@@ -1,0 +1,3 @@
+Clock Program - Kenneth Alcineus
+
+This is a SIC clock program that is 393 bytes long, or 189 bytes long in hexadecimal. The input TIMER is set at the address 7FFD and the first executable instruction FIRST is set at the address 7EA6. Using my assembler, this program successfully and correctly generated object code that revealed these addresses.
