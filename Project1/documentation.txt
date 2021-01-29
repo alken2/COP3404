@@ -1,0 +1,29 @@
+Pass 1 - Kenneth Alcineus
+
+All of the requirements on the Project 1 submission page has been fulfilled by my Pass 1 implementation. The symbol table is a pointer to symbol, a defined type with the string key called name and the int value called address. The table stores symbols using open addressing, and it is automatically resized when over half the table contains non-null symbol names. The table is to have initially have its memory allocated by the initTable() function. The insert(char*, int) function takes the parameters to define the name and the address of a symbol at an index where memory is allocated for the symbol, where the index provided by the search(char*) function using the name of the symbol as the parameter. That index is then determined by the hash(char*) function which also uses the name as the parameter, or by quadratic probing in case the hash function produces an index where there already is a defined name and address. But before the index is found, the search function will "step backwards" and use a previous table size to search for duplicate symbol names for each time the table was resized. The search function returns the first index where there is a null name or -1 if a duplicate name was found. If the number of non-null names found in the table divided by the current size allocated to the table is greater than 0.5, the insert function then calls the resizeTable() function to reallocate twice the memory previously had for the table. Finally, memory is allocated for the name at the selected index and the arguments are inserted into the symbol table. There is no delete function for the table because symbols are only supposed to be added. There is a printTable function, but it is not used since printing hash table elements in a specific order cannot be done reasonably. Instead, the main function prints the name and address after every insert function call. The printTable function can be used to test if the symbol table is fully functional.
+
+This pass 1 implementation is capable of generating 21 unique assembler errors, which are the following:
+
+Maximum memory exceeded!
+Empty line detected!
+Symbol does not start with an alpha character!
+Symbol matches a directive!
+Symbol length is too long!
+Symbol contains at least one invalid character!
+Symbol defined without opcode!
+Directive defined without operand!
+Starting address contains at least one invalid digit!
+Invalid use of START directive!
+Duplicate symbol detected!
+Unable to register BYTE operand as character/hex!
+Invalid quoting in BYTE operand!
+No data between quotes in BYTE operand detected!
+Quoted data in BYTE operand contains at least one invalid digit!
+WORD operand contains at least one invalid digit!
+WORD operand exceeds word size!
+RESB operand contains at least one invalid digit!
+RESW operand contains at least one invalid digit!
+Opcode is not a valid directive nor instruction!
+The amount of END statements is not 1!
+
+There are also three program errors that could be detected to prevent a potential segmentation fault. With the exception of the inability to read a file, none of them should happen under normal circumstances. If this program somehow encounters a program error or a segmentation fault, please let me know, as I would be curious to see what happened.
