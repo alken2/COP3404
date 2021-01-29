@@ -1,0 +1,15 @@
+Pass 2 - Kenneth Alcineus
+
+All of the requirements on the Project 2 submission page has been fulfilled by my Pass 2 implementation. Using the symbol table generated from Pass 1, this project creates an object file for input SIC assembly code. Text records are written in a compact manner, where the object code every consecutive instruction is written on the same text record until the object length reaches a size of 30 bytes. Once that happens, a new text record is created and the process repeats. As for directives, the previous text record is written and a new text record is created, or end record if the directive is END. Unfortunately, this project does not support files that have RESR or EXPORTS dertives nor does the project support instructions that use registers.
+
+This pass 2 implementation is capable of generating 7 unique assembler errors in addition to all the errors from pass 1, which are the following:
+
+Symbol in END operand not found in symbol table!
+Character string length exceeds 255 bytes!
+Hex string length exceeds 255 bytes!
+Given instruction must not have an operand!
+Invalid formatting of operand for given instruction!
+Given instruction must have an operand!
+Symbol in operand not found in symbol table!
+
+Like the first project, there are also three program errors that could be detected to prevent a potential segmentation fault. With the exception of the inability to read a file, none of them should happen under normal circumstances. If this program somehow encounters a program error or a segmentation fault, please let me know, as I would be curious to see what happened.
